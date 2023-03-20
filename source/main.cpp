@@ -1,6 +1,10 @@
-//
-// Created by Admin on 2022/12/18.
-//
+﻿/*
+* 1. BGFX绘制一个立方体
+*/
+
+#define TEST1
+
+#ifdef TEST1
 
 #include "GLFW/glfw3.h"
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -69,18 +73,22 @@ int main()
         uint32_t abgr;
     };
 
+    // 顶点数据
+    // 立方体共8个顶点
     static PosColorVertex cubeVertices[] =
             {
-                    {-1.0f,  1.0f,  1.0f, 0xff000000 },
-                    { 1.0f,  1.0f,  1.0f, 0xff0000ff },
-                    {-1.0f, -1.0f,  1.0f, 0xff00ff00 },
-                    { 1.0f, -1.0f,  1.0f, 0xff00ffff },
-                    {-1.0f,  1.0f, -1.0f, 0xffff0000 },
-                    { 1.0f,  1.0f, -1.0f, 0xffff00ff },
-                    {-1.0f, -1.0f, -1.0f, 0xffffff00 },
-                    { 1.0f, -1.0f, -1.0f, 0xffffffff },
+                    {-1.0f,  1.0f,  1.0f,    0xff000000 },
+                    { 1.0f,  1.0f,  1.0f,    0xff0000ff },
+                    {-1.0f, -1.0f,  1.0f,    0xff00ff00 },
+                    { 1.0f, -1.0f,  1.0f,    0xff00ffff },
+                    {-1.0f,  1.0f, -1.0f,    0xffff0000 },
+                    { 1.0f,  1.0f, -1.0f,    0xffff00ff },
+                    {-1.0f, -1.0f, -1.0f,    0xffffff00 },
+                    { 1.0f, -1.0f, -1.0f,    0xffffffff },
             };
 
+    // 索引数据
+    // 立方体共6个面，每个面2个三角形
     static const uint16_t cubeTriList[] =
             {
                     0, 1, 2,
@@ -97,6 +105,8 @@ int main()
                     6, 3, 7,
             };
 
+    // 数据填充
+    // VBO EBO
     bgfx::VertexLayout pcvDecl;
     pcvDecl.begin()
         .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
@@ -105,6 +115,8 @@ int main()
     bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
+    // 着色器程序
+    // shaderProgram
     bgfx::ShaderHandle vsh = loadShader("vs_cubes.bin");
     bgfx::ShaderHandle fsh = loadShader("fs_cubes.bin");
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
@@ -144,7 +156,9 @@ int main()
         counter++;
     }
 
-//    bgfx::shutdown();
+    bgfx::shutdown();
     glfwTerminate();
     return EXIT_SUCCESS;
 }
+
+#endif // TEST1
