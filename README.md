@@ -1,8 +1,10 @@
-[CU-Production/hello_bgfx: GLFW + bgfx demo (github.com)](https://github.com/CU-Production/hello_bgfx)
+﻿[CU-Production/hello_bgfx: GLFW + bgfx demo (github.com)](https://github.com/CU-Production/hello_bgfx)
 
 [<引擎架构>-Bgfx多线程渲染 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/474396981)
 
 [跨平台图形渲染引擎bgfx分析 | 码农家园 (codenong.com)](https://www.codenong.com/cs105888060/)
+
+[BGFX的view](https://www.cnblogs.com/crazylights/p/13555816.html)
 
 ```shell
 $ git clone --recursive git@github.com:Yangpan08/testBGFX.git
