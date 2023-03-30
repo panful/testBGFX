@@ -3,9 +3,10 @@
  * 2. 将BGFX绘制的结果保存为图片
  * 3. 使用stb_image_write保存像素为图片
  * 4. 更新vertexBuffer，修改立方体颜色
+ * 5. 使用stb_image_write写一个带透明度的图片
  */
 
-#define TEST4
+#define TEST5
 
 #ifdef TEST1
 
@@ -86,32 +87,56 @@ int main()
     // 立方体共8个顶点
     static PosColorVertex cubeVertices[] =
         {
-            {-1.0f,  1.0f,  1.0f,  0xff000000},
-            { 1.0f,  1.0f,  1.0f,  0xff0000ff},
-            {-1.0f, -1.0f,  1.0f,  0xff00ff00},
-            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
-            {-1.0f,  1.0f, -1.0f,  0xffff0000},
-            { 1.0f,  1.0f, -1.0f,  0xffff00ff},
-            {-1.0f, -1.0f, -1.0f,  0xffffff00},
-            { 1.0f, -1.0f, -1.0f,  0xffffffff},
+            {-1.0f, 1.0f, 1.0f, 0xff000000},
+            {1.0f, 1.0f, 1.0f, 0xff0000ff},
+            {-1.0f, -1.0f, 1.0f, 0xff00ff00},
+            {1.0f, -1.0f, 1.0f, 0xff00ffff},
+            {-1.0f, 1.0f, -1.0f, 0xffff0000},
+            {1.0f, 1.0f, -1.0f, 0xffff00ff},
+            {-1.0f, -1.0f, -1.0f, 0xffffff00},
+            {1.0f, -1.0f, -1.0f, 0xffffffff},
         };
 
     // 索引数据
     // 立方体共6个面，每个面2个三角形
     static const uint16_t cubeTriList[] =
         {
-            0, 1, 2,
-            1, 3, 2,
-            4, 6, 5,
-            5, 6, 7,
-            0, 2, 4,
-            4, 2, 6,
-            1, 5, 3,
-            5, 7, 3,
-            0, 4, 1,
-            4, 5, 1,
-            2, 3, 6,
-            6, 3, 7,
+            0,
+            1,
+            2,
+            1,
+            3,
+            2,
+            4,
+            6,
+            5,
+            5,
+            6,
+            7,
+            0,
+            2,
+            4,
+            4,
+            2,
+            6,
+            1,
+            5,
+            3,
+            5,
+            7,
+            3,
+            0,
+            4,
+            1,
+            4,
+            5,
+            1,
+            2,
+            3,
+            6,
+            6,
+            3,
+            7,
         };
 
     // 数据填充
@@ -258,32 +283,56 @@ int main()
     // 立方体共8个顶点
     static PosColorVertex cubeVertices[] =
         {
-            {-1.0f,  1.0f,  1.0f,  0xff000000},
-            { 1.0f,  1.0f,  1.0f,  0xff0000ff},
-            {-1.0f, -1.0f,  1.0f,  0xff00ff00},
-            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
-            {-1.0f,  1.0f, -1.0f,  0xffff0000},
-            { 1.0f,  1.0f, -1.0f,  0xffff00ff},
-            {-1.0f, -1.0f, -1.0f,  0xffffff00},
-            { 1.0f, -1.0f, -1.0f,  0xffffffff},
+            {-1.0f, 1.0f, 1.0f, 0xff000000},
+            {1.0f, 1.0f, 1.0f, 0xff0000ff},
+            {-1.0f, -1.0f, 1.0f, 0xff00ff00},
+            {1.0f, -1.0f, 1.0f, 0xff00ffff},
+            {-1.0f, 1.0f, -1.0f, 0xffff0000},
+            {1.0f, 1.0f, -1.0f, 0xffff00ff},
+            {-1.0f, -1.0f, -1.0f, 0xffffff00},
+            {1.0f, -1.0f, -1.0f, 0xffffffff},
         };
 
     // 索引数据
     // 立方体共6个面，每个面2个三角形
     static const uint16_t cubeTriList[] =
         {
-            0, 1, 2,
-            1, 3, 2,
-            4, 6, 5,
-            5, 6, 7,
-            0, 2, 4,
-            4, 2, 6,
-            1, 5, 3,
-            5, 7, 3,
-            0, 4, 1,
-            4, 5, 1,
-            2, 3, 6,
-            6, 3, 7,
+            0,
+            1,
+            2,
+            1,
+            3,
+            2,
+            4,
+            6,
+            5,
+            5,
+            6,
+            7,
+            0,
+            2,
+            4,
+            4,
+            2,
+            6,
+            1,
+            5,
+            3,
+            5,
+            7,
+            3,
+            0,
+            4,
+            1,
+            4,
+            5,
+            1,
+            2,
+            3,
+            6,
+            6,
+            3,
+            7,
         };
 
     // 数据填充
@@ -504,45 +553,69 @@ int main()
     // 立方体共8个顶点
     static PosColorVertex cubeVertices[] =
         {
-            {-1.0f,  1.0f,  1.0f,  0xff000000},
-            { 1.0f,  1.0f,  1.0f,  0xff0000ff},
-            {-1.0f, -1.0f,  1.0f,  0xff00ff00},
-            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
-            {-1.0f,  1.0f, -1.0f,  0xffff0000},
-            { 1.0f,  1.0f, -1.0f,  0xffff00ff},
-            {-1.0f, -1.0f, -1.0f,  0xffffff00},
-            { 1.0f, -1.0f, -1.0f,  0xffffffff},
+            {-1.0f, 1.0f, 1.0f, 0xff000000},
+            {1.0f, 1.0f, 1.0f, 0xff0000ff},
+            {-1.0f, -1.0f, 1.0f, 0xff00ff00},
+            {1.0f, -1.0f, 1.0f, 0xff00ffff},
+            {-1.0f, 1.0f, -1.0f, 0xffff0000},
+            {1.0f, 1.0f, -1.0f, 0xffff00ff},
+            {-1.0f, -1.0f, -1.0f, 0xffffff00},
+            {1.0f, -1.0f, -1.0f, 0xffffffff},
         };
 
     // 黄色的立方体，颜色布局方式 {0xABGR}
     static PosColorVertex cubeVertices2[] =
         {
-            {-1.0f,  1.0f,  1.0f,  0xff00ffff},
-            { 1.0f,  1.0f,  1.0f,  0xff00ffff},
-            {-1.0f, -1.0f,  1.0f,  0xff00ffff},
-            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
-            {-1.0f,  1.0f, -1.0f,  0xff00ffff},
-            { 1.0f,  1.0f, -1.0f,  0xff00ffff},
-            {-1.0f, -1.0f, -1.0f,  0xff00ffff},
-            { 1.0f, -1.0f, -1.0f,  0xff00ffff},
+            {-1.0f, 1.0f, 1.0f, 0xff00ffff},
+            {1.0f, 1.0f, 1.0f, 0xff00ffff},
+            {-1.0f, -1.0f, 1.0f, 0xff00ffff},
+            {1.0f, -1.0f, 1.0f, 0xff00ffff},
+            {-1.0f, 1.0f, -1.0f, 0xff00ffff},
+            {1.0f, 1.0f, -1.0f, 0xff00ffff},
+            {-1.0f, -1.0f, -1.0f, 0xff00ffff},
+            {1.0f, -1.0f, -1.0f, 0xff00ffff},
         };
 
     // 索引数据
     // 立方体共6个面，每个面2个三角形
     static const uint16_t cubeTriList[] =
         {
-            0, 1, 2,
-            1, 3, 2,
-            4, 6, 5,
-            5, 6, 7,
-            0, 2, 4,
-            4, 2, 6,
-            1, 5, 3,
-            5, 7, 3,
-            0, 4, 1,
-            4, 5, 1,
-            2, 3, 6,
-            6, 3, 7,
+            0,
+            1,
+            2,
+            1,
+            3,
+            2,
+            4,
+            6,
+            5,
+            5,
+            6,
+            7,
+            0,
+            2,
+            4,
+            4,
+            2,
+            6,
+            1,
+            5,
+            3,
+            5,
+            7,
+            3,
+            0,
+            4,
+            1,
+            4,
+            5,
+            1,
+            2,
+            3,
+            6,
+            6,
+            3,
+            7,
         };
 
     // 数据填充
@@ -608,3 +681,104 @@ int main()
 
 #endif // TEST4
 
+#ifdef TEST5
+
+#include <iostream>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
+int main()
+{
+    const char *filepath = "stb_write_demo.png";
+    int w = 800, h = 600, n = 4;
+    auto data = new char[w * h * n]();
+
+    for (size_t i = 0; i < w; i++)
+    {
+        char r, g, b, a;
+        for (size_t j = 0; j < h; j++)
+        {
+            if (j > h / 2)
+            {
+                if (i < w / 4 * 1)
+                {
+                    r = 255;
+                    g = 0;
+                    b = 0;
+                    a = 255;
+                }
+                else if (i < w / 4 * 2)
+                {
+                    r = 0;
+                    g = 255;
+                    b = 0;
+                    a = 255;
+                }
+                else if (i < w / 4 * 3)
+                {
+                    r = 0;
+                    g = 0;
+                    b = 255;
+                    a = 255;
+                }
+                else
+                {
+                    r = 255;
+                    g = 255;
+                    b = 0;
+                    a = 255;
+                }
+            }
+            else
+            {
+                if (i < w / 4 * 1)
+                {
+                    r = 0;
+                    g = 255;
+                    b = 255;
+                    a = 64;
+                }
+                else if (i < w / 4 * 2)
+                {
+                    r = 255;
+                    g = 255;
+                    b = 0;
+                    a = 128;
+                }
+                else if (i < w / 4 * 3)
+                {
+                    r = 255;
+                    g = 0;
+                    b = 255;
+                    a = 255;
+                }
+                else
+                {
+                    r = 255;
+                    g = 255;
+                    b = 255;
+                    a = 0;
+                }
+            }
+
+            data[(w * j + i) * n + 0] = r; // red
+            data[(w * j + i) * n + 1] = g; // green
+            data[(w * j + i) * n + 2] = b; // blue
+            data[(w * j + i) * n + 3] = a; // alpha
+        }
+    }
+
+    if (stbi_write_png(filepath, w, h, n, data, 0))
+    {
+        std::cout << "write " << filepath << " success\n";
+    }
+    else
+    {
+        std::cout << "write " << filepath << " failed\n";
+    }
+
+    return 0;
+}
+
+#endif // TEST3
