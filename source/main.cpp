@@ -6,7 +6,7 @@
  * 5. 使用stb_image_write写一个带透明度的图片
  */
 
-#define TEST5
+#define TEST1
 
 #ifdef TEST1
 
@@ -19,34 +19,34 @@
 
 #include <string>
 
-const int WNDW_WIDTH = 800;
+const int WNDW_WIDTH  = 800;
 const int WNDW_HEIGHT = 600;
 
-bgfx::ShaderHandle loadShader(const char *FILENAME)
+bgfx::ShaderHandle loadShader(const char* FILENAME)
 {
     std::string shaderPath = "???";
 
     switch (bgfx::getRendererType())
     {
-    case bgfx::RendererType::Direct3D11:
-    case bgfx::RendererType::Direct3D12:
-        shaderPath = "shaders/dx11/";
-        break;
-    case bgfx::RendererType::Vulkan:
-        shaderPath = "shaders/spirv/";
-        break;
-    default:
-        shaderPath = "???";
+        case bgfx::RendererType::Direct3D11:
+        case bgfx::RendererType::Direct3D12:
+            shaderPath = "shaders/dx11/";
+            break;
+        case bgfx::RendererType::Vulkan:
+            shaderPath = "shaders/spirv/";
+            break;
+        default:
+            shaderPath = "???";
     }
 
     shaderPath += FILENAME;
 
-    FILE *file = fopen(shaderPath.c_str(), "rb");
+    FILE* file = fopen(shaderPath.c_str(), "rb");
     fseek(file, 0, SEEK_END);
     long fileSize = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    const bgfx::Memory *mem = bgfx::alloc(fileSize + 1);
+    const bgfx::Memory* mem = bgfx::alloc(fileSize + 1);
     fread(mem->data, 1, fileSize, file);
     mem->data[mem->size - 1] = '\0';
     fclose(file);
@@ -58,7 +58,7 @@ int main()
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow *window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "GLFW_BGFX", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "GLFW_BGFX", nullptr, nullptr);
 
     // Call bgfx::renderFrame before bgfx::init to signal to bgfx not to create a render thread.
     // Most graphics APIs must be used on the same thread that created the window.
@@ -66,13 +66,13 @@ int main()
 
     bgfx::Init bgfxInit;
     bgfxInit.platformData.nwh = glfwGetWin32Window(window);
-    bgfxInit.type = bgfx::RendererType::Count; // Automatically choose a renderer.
+    bgfxInit.type             = bgfx::RendererType::Count; // Automatically choose a renderer.
     // bgfxInit.type = bgfx::RendererType::Vulkan;
     // bgfxInit.type = bgfx::RendererType::OpenGL;
     // bgfxInit.type = bgfx::RendererType::Direct3D12;
-    bgfxInit.resolution.width = WNDW_WIDTH;
+    bgfxInit.resolution.width  = WNDW_WIDTH;
     bgfxInit.resolution.height = WNDW_HEIGHT;
-    bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
+    bgfxInit.resolution.reset  = BGFX_RESET_VSYNC;
     bgfx::init(bgfxInit);
 
     struct PosColorVertex
@@ -83,76 +83,43 @@ int main()
         uint32_t abgr;
     };
 
-    // 顶点数据
-    // 立方体共8个顶点
-    static PosColorVertex cubeVertices[] =
-        {
-            {-1.0f, 1.0f, 1.0f, 0xff000000},
-            {1.0f, 1.0f, 1.0f, 0xff0000ff},
-            {-1.0f, -1.0f, 1.0f, 0xff00ff00},
-            {1.0f, -1.0f, 1.0f, 0xff00ffff},
-            {-1.0f, 1.0f, -1.0f, 0xffff0000},
-            {1.0f, 1.0f, -1.0f, 0xffff00ff},
-            {-1.0f, -1.0f, -1.0f, 0xffffff00},
-            {1.0f, -1.0f, -1.0f, 0xffffffff},
+    // 顶点数据 立方体共8个顶点
+    // clang-format off
+    static PosColorVertex cubeVertices[] = {
+            {-1.0f,  1.0f,  1.0f,  0xff000000},
+            { 1.0f,  1.0f,  1.0f,  0xff0000ff},
+            {-1.0f, -1.0f,  1.0f,  0xff00ff00},
+            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
+            {-1.0f,  1.0f, -1.0f,  0xffff0000},
+            { 1.0f,  1.0f, -1.0f,  0xffff00ff},
+            {-1.0f, -1.0f, -1.0f,  0xffffff00},
+            { 1.0f, -1.0f, -1.0f,  0xffffffff},
         };
+    // clang-format on
 
-    // 索引数据
-    // 立方体共6个面，每个面2个三角形
-    static const uint16_t cubeTriList[] =
-        {
-            0,
-            1,
-            2,
-            1,
-            3,
-            2,
-            4,
-            6,
-            5,
-            5,
-            6,
-            7,
-            0,
-            2,
-            4,
-            4,
-            2,
-            6,
-            1,
-            5,
-            3,
-            5,
-            7,
-            3,
-            0,
-            4,
-            1,
-            4,
-            5,
-            1,
-            2,
-            3,
-            6,
-            6,
-            3,
-            7,
+    // 索引数据 立方体共6个面，每个面2个三角形
+    // clang-format off
+    static const uint16_t cubeTriList[] = {
+            0, 1, 2, 1, 3, 2,
+            4, 6, 5, 5, 6, 7,
+            0, 2, 4, 4, 2, 6,
+            1, 5, 3, 5, 7, 3,
+            0, 4, 1, 4, 5, 1,
+            2, 3, 6, 6, 3, 7,
         };
+    // clang-format on
 
     // 数据填充
     // VBO EBO
     bgfx::VertexLayout pcvDecl;
-    pcvDecl.begin()
-        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-        .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
-        .end();
+    pcvDecl.begin().add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float).add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true).end();
     bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
-    bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+    bgfx::IndexBufferHandle ibh  = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
     // 着色器程序
     // shaderProgram
-    bgfx::ShaderHandle vsh = loadShader("vs_cubes.bin");
-    bgfx::ShaderHandle fsh = loadShader("fs_cubes.bin");
+    bgfx::ShaderHandle vsh      = loadShader("vs_cubes.bin");
+    bgfx::ShaderHandle fsh      = loadShader("fs_cubes.bin");
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
     // Rendering Loop
@@ -171,7 +138,7 @@ int main()
         // This dummy draw call is here to make sure that view 0 is cleared if no other draw calls are submitted to view 0.
         bgfx::touch(0);
 
-        const bx::Vec3 at = {0.0f, 0.0f, 0.0f};
+        const bx::Vec3 at  = {0.0f, 0.0f, 0.0f};
         const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
         float view[16];
         bx::mtxLookAt(view, eye, at);
@@ -208,41 +175,41 @@ int main()
 #include "bgfx/platform.h"
 #include "bx/math.h"
 
-#include <string>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-const int WNDW_WIDTH = 800;
+const int WNDW_WIDTH  = 800;
 const int WNDW_HEIGHT = 600;
 
-bgfx::ShaderHandle loadShader(const char *FILENAME)
+bgfx::ShaderHandle loadShader(const char* FILENAME)
 {
     std::string shaderPath = "???";
 
     switch (bgfx::getRendererType())
     {
-    case bgfx::RendererType::Direct3D11:
-    case bgfx::RendererType::Direct3D12:
-        shaderPath = "shaders/dx11/";
-        break;
-    case bgfx::RendererType::Vulkan:
-        shaderPath = "shaders/spirv/";
-        break;
-    default:
-        shaderPath = "???";
+        case bgfx::RendererType::Direct3D11:
+        case bgfx::RendererType::Direct3D12:
+            shaderPath = "shaders/dx11/";
+            break;
+        case bgfx::RendererType::Vulkan:
+            shaderPath = "shaders/spirv/";
+            break;
+        default:
+            shaderPath = "???";
     }
 
     shaderPath += FILENAME;
 
-    FILE *file = fopen(shaderPath.c_str(), "rb");
+    FILE* file = fopen(shaderPath.c_str(), "rb");
     fseek(file, 0, SEEK_END);
     long fileSize = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    const bgfx::Memory *mem = bgfx::alloc(fileSize + 1);
+    const bgfx::Memory* mem = bgfx::alloc(fileSize + 1);
     fread(mem->data, 1, fileSize, file);
     mem->data[mem->size - 1] = '\0';
     fclose(file);
@@ -254,7 +221,7 @@ int main()
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow *window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "GLFW_BGFX", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "GLFW_BGFX", nullptr, nullptr);
 
     // Call bgfx::renderFrame before bgfx::init to signal to bgfx not to create a render thread.
     // Most graphics APIs must be used on the same thread that created the window.
@@ -262,13 +229,13 @@ int main()
 
     bgfx::Init bgfxInit;
     bgfxInit.platformData.nwh = glfwGetWin32Window(window);
-    bgfxInit.type = bgfx::RendererType::Count; // Automatically choose a renderer.
+    bgfxInit.type             = bgfx::RendererType::Count; // Automatically choose a renderer.
     // bgfxInit.type = bgfx::RendererType::Vulkan;
     // bgfxInit.type = bgfx::RendererType::OpenGL;
     // bgfxInit.type = bgfx::RendererType::Direct3D12;
-    bgfxInit.resolution.width = WNDW_WIDTH;
+    bgfxInit.resolution.width  = WNDW_WIDTH;
     bgfxInit.resolution.height = WNDW_HEIGHT;
-    bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
+    bgfxInit.resolution.reset  = BGFX_RESET_VSYNC;
     bgfx::init(bgfxInit);
 
     struct PosColorVertex
@@ -279,76 +246,43 @@ int main()
         uint32_t abgr;
     };
 
-    // 顶点数据
-    // 立方体共8个顶点
-    static PosColorVertex cubeVertices[] =
-        {
-            {-1.0f, 1.0f, 1.0f, 0xff000000},
-            {1.0f, 1.0f, 1.0f, 0xff0000ff},
-            {-1.0f, -1.0f, 1.0f, 0xff00ff00},
-            {1.0f, -1.0f, 1.0f, 0xff00ffff},
-            {-1.0f, 1.0f, -1.0f, 0xffff0000},
-            {1.0f, 1.0f, -1.0f, 0xffff00ff},
-            {-1.0f, -1.0f, -1.0f, 0xffffff00},
-            {1.0f, -1.0f, -1.0f, 0xffffffff},
+    // 顶点数据 立方体共8个顶点
+    // clang-format off
+    static PosColorVertex cubeVertices[] = {
+            {-1.0f,  1.0f,  1.0f,  0xff000000},
+            { 1.0f,  1.0f,  1.0f,  0xff0000ff},
+            {-1.0f, -1.0f,  1.0f,  0xff00ff00},
+            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
+            {-1.0f,  1.0f, -1.0f,  0xffff0000},
+            { 1.0f,  1.0f, -1.0f,  0xffff00ff},
+            {-1.0f, -1.0f, -1.0f,  0xffffff00},
+            { 1.0f, -1.0f, -1.0f,  0xffffffff},
         };
+    // clang-format on
 
-    // 索引数据
-    // 立方体共6个面，每个面2个三角形
-    static const uint16_t cubeTriList[] =
-        {
-            0,
-            1,
-            2,
-            1,
-            3,
-            2,
-            4,
-            6,
-            5,
-            5,
-            6,
-            7,
-            0,
-            2,
-            4,
-            4,
-            2,
-            6,
-            1,
-            5,
-            3,
-            5,
-            7,
-            3,
-            0,
-            4,
-            1,
-            4,
-            5,
-            1,
-            2,
-            3,
-            6,
-            6,
-            3,
-            7,
+    // 索引数据 立方体共6个面，每个面2个三角形
+    // clang-format off
+    static const uint16_t cubeTriList[] = {
+            0, 1, 2, 1, 3, 2,
+            4, 6, 5, 5, 6, 7,
+            0, 2, 4, 4, 2, 6,
+            1, 5, 3, 5, 7, 3,
+            0, 4, 1, 4, 5, 1,
+            2, 3, 6, 6, 3, 7,
         };
+    // clang-format on
 
     // 数据填充
     // VBO EBO
     bgfx::VertexLayout pcvDecl;
-    pcvDecl.begin()
-        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-        .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
-        .end();
+    pcvDecl.begin().add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float).add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true).end();
     bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
-    bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+    bgfx::IndexBufferHandle ibh  = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
     // 着色器程序
     // shaderProgram
-    bgfx::ShaderHandle vsh = loadShader("vs_cubes.bin");
-    bgfx::ShaderHandle fsh = loadShader("fs_cubes.bin");
+    bgfx::ShaderHandle vsh      = loadShader("vs_cubes.bin");
+    bgfx::ShaderHandle fsh      = loadShader("fs_cubes.bin");
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
     // storage pixels
@@ -357,7 +291,7 @@ int main()
 
     // Rendering Loop
     unsigned int counter = 0;
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window) && counter < 50)
     {
         glfwPollEvents();
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -366,8 +300,14 @@ int main()
         }
 
         // Create a texture with the BGFX_TEXTURE_RT flag to indicate that it is a render target texture.
-        auto colorTexture = bgfx::createTexture2D(WNDW_WIDTH, WNDW_HEIGHT, false, 1, bgfx::TextureFormat::RGBA8,
-                                                  0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP | BGFX_TEXTURE_RT_MSAA_X16);
+        auto colorTexture = bgfx::createTexture2D(
+            WNDW_WIDTH,
+            WNDW_HEIGHT,
+            false,
+            1,
+            bgfx::TextureFormat::RGBA8,
+            0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP | BGFX_TEXTURE_RT_MSAA_X16
+        );
 
         // Create a frame buffer object with the texture as its color attachment.
         bgfx::FrameBufferHandle frameBuffer = bgfx::createFrameBuffer(1, &colorTexture, false);
@@ -382,7 +322,7 @@ int main()
         // This dummy draw call is here to make sure that view 0 is cleared if no other draw calls are submitted to view 0.
         bgfx::touch(0);
 
-        const bx::Vec3 at = {0.0f, 0.0f, 0.0f};
+        const bx::Vec3 at  = {0.0f, 0.0f, 0.0f};
         const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
         float view[16];
         bx::mtxLookAt(view, eye, at);
@@ -400,9 +340,15 @@ int main()
         bgfx::frame();
 
         // Create a texture with the BGFX_TEXTURE_READ_BACK flag to indicate that it can be read back from the GPU.
-        auto textureHandle = bgfx::createTexture2D(WNDW_WIDTH, WNDW_HEIGHT, false, 1, bgfx::TextureFormat::RGBA8,
-                                                   0 | BGFX_TEXTURE_BLIT_DST | BGFX_TEXTURE_READ_BACK | BGFX_SAMPLER_MIN_POINT |
-                                                       BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP);
+        auto textureHandle = bgfx::createTexture2D(
+            WNDW_WIDTH,
+            WNDW_HEIGHT,
+            false,
+            1,
+            bgfx::TextureFormat::RGBA8,
+            0 | BGFX_TEXTURE_BLIT_DST | BGFX_TEXTURE_READ_BACK | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT
+                | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
+        );
 
         // Blit the color attachment of the frame buffer object to the read-back texture.
         bgfx::blit(0, textureHandle, 0, 0, colorTexture);
@@ -421,6 +367,8 @@ int main()
         bgfx::destroy(textureHandle);
     }
 
+    std::cout << "save " << counter << " images\n";
+
     bgfx::shutdown();
     glfwTerminate();
     return EXIT_SUCCESS;
@@ -437,7 +385,7 @@ int main()
 
 int main()
 {
-    const char *filepath = "stb_write_demo.png";
+    const char* filepath = "stb_write_demo.png";
     int w = 800, h = 600, n = 3;
     auto data = new char[w * h * n]();
 
@@ -485,34 +433,34 @@ int main()
 
 #include <string>
 
-const int WNDW_WIDTH = 800;
+const int WNDW_WIDTH  = 800;
 const int WNDW_HEIGHT = 600;
 
-bgfx::ShaderHandle loadShader(const char *FILENAME)
+bgfx::ShaderHandle loadShader(const char* FILENAME)
 {
     std::string shaderPath = "???";
 
     switch (bgfx::getRendererType())
     {
-    case bgfx::RendererType::Direct3D11:
-    case bgfx::RendererType::Direct3D12:
-        shaderPath = "shaders/dx11/";
-        break;
-    case bgfx::RendererType::Vulkan:
-        shaderPath = "shaders/spirv/";
-        break;
-    default:
-        shaderPath = "???";
+        case bgfx::RendererType::Direct3D11:
+        case bgfx::RendererType::Direct3D12:
+            shaderPath = "shaders/dx11/";
+            break;
+        case bgfx::RendererType::Vulkan:
+            shaderPath = "shaders/spirv/";
+            break;
+        default:
+            shaderPath = "???";
     }
 
     shaderPath += FILENAME;
 
-    FILE *file = fopen(shaderPath.c_str(), "rb");
+    FILE* file = fopen(shaderPath.c_str(), "rb");
     fseek(file, 0, SEEK_END);
     long fileSize = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    const bgfx::Memory *mem = bgfx::alloc(fileSize + 1);
+    const bgfx::Memory* mem = bgfx::alloc(fileSize + 1);
     fread(mem->data, 1, fileSize, file);
     mem->data[mem->size - 1] = '\0';
     fclose(file);
@@ -524,7 +472,7 @@ int main()
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow *window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "GLFW_BGFX", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WNDW_WIDTH, WNDW_HEIGHT, "GLFW_BGFX", nullptr, nullptr);
 
     // Call bgfx::renderFrame before bgfx::init to signal to bgfx not to create a render thread.
     // Most graphics APIs must be used on the same thread that created the window.
@@ -532,13 +480,13 @@ int main()
 
     bgfx::Init bgfxInit;
     bgfxInit.platformData.nwh = glfwGetWin32Window(window);
-    bgfxInit.type = bgfx::RendererType::Count; // Automatically choose a renderer.
+    bgfxInit.type             = bgfx::RendererType::Count; // Automatically choose a renderer.
     // bgfxInit.type = bgfx::RendererType::Vulkan;
     // bgfxInit.type = bgfx::RendererType::OpenGL;
     // bgfxInit.type = bgfx::RendererType::Direct3D12;
-    bgfxInit.resolution.width = WNDW_WIDTH;
+    bgfxInit.resolution.width  = WNDW_WIDTH;
     bgfxInit.resolution.height = WNDW_HEIGHT;
-    bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
+    bgfxInit.resolution.reset  = BGFX_RESET_VSYNC;
     bgfx::init(bgfxInit);
 
     struct PosColorVertex
@@ -549,82 +497,46 @@ int main()
         uint32_t abgr;
     };
 
-    // 顶点数据
-    // 立方体共8个顶点
-    static PosColorVertex cubeVertices[] =
-        {
-            {-1.0f, 1.0f, 1.0f, 0xff000000},
-            {1.0f, 1.0f, 1.0f, 0xff0000ff},
-            {-1.0f, -1.0f, 1.0f, 0xff00ff00},
-            {1.0f, -1.0f, 1.0f, 0xff00ffff},
-            {-1.0f, 1.0f, -1.0f, 0xffff0000},
-            {1.0f, 1.0f, -1.0f, 0xffff00ff},
-            {-1.0f, -1.0f, -1.0f, 0xffffff00},
-            {1.0f, -1.0f, -1.0f, 0xffffffff},
+    // clang-format off
+    // 顶点数据 立方体共8个顶点
+    static PosColorVertex cubeVertices[] = {
+            {-1.0f,  1.0f,  1.0f,  0xff000000},
+            { 1.0f,  1.0f,  1.0f,  0xff0000ff},
+            {-1.0f, -1.0f,  1.0f,  0xff00ff00},
+            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
+            {-1.0f,  1.0f, -1.0f,  0xffff0000},
+            { 1.0f,  1.0f, -1.0f,  0xffff00ff},
+            {-1.0f, -1.0f, -1.0f,  0xffffff00},
+            { 1.0f, -1.0f, -1.0f,  0xffffffff},
         };
 
     // 黄色的立方体，颜色布局方式 {0xABGR}
-    static PosColorVertex cubeVertices2[] =
-        {
-            {-1.0f, 1.0f, 1.0f, 0xff00ffff},
-            {1.0f, 1.0f, 1.0f, 0xff00ffff},
-            {-1.0f, -1.0f, 1.0f, 0xff00ffff},
-            {1.0f, -1.0f, 1.0f, 0xff00ffff},
-            {-1.0f, 1.0f, -1.0f, 0xff00ffff},
-            {1.0f, 1.0f, -1.0f, 0xff00ffff},
-            {-1.0f, -1.0f, -1.0f, 0xff00ffff},
-            {1.0f, -1.0f, -1.0f, 0xff00ffff},
+    static PosColorVertex cubeVertices2[] = {
+            {-1.0f,  1.0f,  1.0f,  0xff00ffff},
+            { 1.0f,  1.0f,  1.0f,  0xff00ffff},
+            {-1.0f, -1.0f,  1.0f,  0xff00ffff},
+            { 1.0f, -1.0f,  1.0f,  0xff00ffff},
+            {-1.0f,  1.0f, -1.0f,  0xff00ffff},
+            { 1.0f,  1.0f, -1.0f,  0xff00ffff},
+            {-1.0f, -1.0f, -1.0f,  0xff00ffff},
+            { 1.0f, -1.0f, -1.0f,  0xff00ffff},
         };
 
-    // 索引数据
-    // 立方体共6个面，每个面2个三角形
-    static const uint16_t cubeTriList[] =
-        {
-            0,
-            1,
-            2,
-            1,
-            3,
-            2,
-            4,
-            6,
-            5,
-            5,
-            6,
-            7,
-            0,
-            2,
-            4,
-            4,
-            2,
-            6,
-            1,
-            5,
-            3,
-            5,
-            7,
-            3,
-            0,
-            4,
-            1,
-            4,
-            5,
-            1,
-            2,
-            3,
-            6,
-            6,
-            3,
-            7,
+    // 索引数据 立方体共6个面，每个面2个三角形
+    static const uint16_t cubeTriList[] = {
+            0, 1, 2, 1, 3, 2,
+            4, 6, 5, 5, 6, 7,
+            0, 2, 4, 4, 2, 6,
+            1, 5, 3, 5, 7, 3,
+            0, 4, 1, 4, 5, 1,
+            2, 3, 6, 6, 3, 7,
         };
+    // clang-format on
 
     // 数据填充
     // VBO EBO
     bgfx::VertexLayout pcvDecl;
-    pcvDecl.begin()
-        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-        .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
-        .end();
+    pcvDecl.begin().add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float).add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true).end();
     auto vbh = bgfx::createDynamicVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     auto ibh = bgfx::createDynamicIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
@@ -633,8 +545,8 @@ int main()
 
     // 着色器程序
     // shaderProgram
-    bgfx::ShaderHandle vsh = loadShader("vs_cubes.bin");
-    bgfx::ShaderHandle fsh = loadShader("fs_cubes.bin");
+    bgfx::ShaderHandle vsh      = loadShader("vs_cubes.bin");
+    bgfx::ShaderHandle fsh      = loadShader("fs_cubes.bin");
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
     // Rendering Loop
@@ -653,7 +565,7 @@ int main()
         // This dummy draw call is here to make sure that view 0 is cleared if no other draw calls are submitted to view 0.
         bgfx::touch(0);
 
-        const bx::Vec3 at = {0.0f, 0.0f, 0.0f};
+        const bx::Vec3 at  = {0.0f, 0.0f, 0.0f};
         const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
         float view[16];
         bx::mtxLookAt(view, eye, at);
@@ -690,7 +602,7 @@ int main()
 
 int main()
 {
-    const char *filepath = "stb_write_demo.png";
+    const char* filepath = "stb_write_demo.png";
     int w = 800, h = 600, n = 4;
     auto data = new char[w * h * n]();
 
@@ -781,4 +693,4 @@ int main()
     return 0;
 }
 
-#endif // TEST3
+#endif // TEST5
